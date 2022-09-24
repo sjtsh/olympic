@@ -18,7 +18,7 @@ class CommonWidget extends StatelessWidget {
                 child:
                     Center(child: LottieBuilder.asset("assets/stream.json"))),
             Text(
-              "StreamOn",
+              "Olympic On",
               style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.bold,

@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hovering/hovering.dart';
+import 'package:provider/provider.dart';
 import 'package:streamon/Components/TextField.dart';
+
+import '../Providers/UserManagement.dart';
 
 class DialogPrompt extends StatelessWidget {
   const DialogPrompt({Key? key}) : super(key: key);
@@ -9,6 +13,7 @@ class DialogPrompt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
+    TextEditingController controller1 = TextEditingController();
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -44,7 +49,7 @@ class DialogPrompt extends StatelessWidget {
                     height: 12,
                   ),
                   PersonalTextField(
-                    controller: controller,
+                    controller: controller1,
                     hintText: "Confirm Password",
                     obscureText: true,
                     padding: 0,
@@ -53,7 +58,23 @@ class DialogPrompt extends StatelessWidget {
                     height: 16,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      if (controller.text == "") {
+                        Navigator.pop(context);
+                        context
+                            .read<UserManagement>()
+                            .showSnackbar("passwords cannot be empty");
+                      }else if (controller.text != controller1.text) {
+                        Navigator.pop(context);
+                        context
+                            .read<UserManagement>()
+                            .showSnackbar("passwords did not match");
+                      }else {
+                        await FirebaseAuth.instance.currentUser
+                            ?.updatePassword(controller.text);
+                        Navigator.pop(context);
+                      }
+                    },
                     child: HoverWidget(
                       onHover: (PointerEnterEvent event) {},
                       hoverChild: Container(

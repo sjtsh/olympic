@@ -9,18 +9,20 @@ import 'package:streamon/Providers/NavigationManagement.dart';
 import 'package:streamon/Screens/Screens/VideoWidget.dart';
 import 'package:streamon/data.dart';
 
+import '../../../Entities/LiveVideoObject.dart';
 import '../../../Entities/VideoObject.dart';
+import 'BroadcastView.dart';
 
-class BroadcastView extends StatefulWidget {
-  final VideoObject playUrl;
+class BroadcastLiveView extends StatefulWidget {
+  final LiveVideoObject playUrl;
 
-  BroadcastView(this.playUrl);
+  BroadcastLiveView(this.playUrl);
 
   @override
-  State<BroadcastView> createState() => _BroadcastViewState();
+  State<BroadcastLiveView> createState() => _BroadcastLiveViewState();
 }
 
-class _BroadcastViewState extends State<BroadcastView> {
+class _BroadcastLiveViewState extends State<BroadcastLiveView> {
   final StreamController<double> controller = StreamController<double>();
 
   Timer? timer;
@@ -29,7 +31,7 @@ class _BroadcastViewState extends State<BroadcastView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<InteractionManagement>().addViewer(widget.playUrl.id);
+    context.read<InteractionManagement>().addStreamer(widget.playUrl.id);
     timer = Timer.periodic(Duration(milliseconds: 200), (timer) {
       controller.add(1);
     });
@@ -38,6 +40,7 @@ class _BroadcastViewState extends State<BroadcastView> {
   @override
   void dispose() {
     // TODO: implement dispose
+    context.read<InteractionManagement>().removeStreamer(widget.playUrl.id);
     timer?.cancel();
     super.dispose();
   }
@@ -57,7 +60,12 @@ class _BroadcastViewState extends State<BroadcastView> {
                 height: height / 2,
                 width: width,
                 color: Colors.white.withOpacity(0.1),
-                child: VideoWidget(widget.playUrl.url, shouldPlay: true),
+                child: VideoWidget(
+                  widget.playUrl.url,
+                  shouldPlay: true,
+                  dur: widget.playUrl.started.difference(DateTime.now()),
+                  playUrl: widget.playUrl,
+                ),
                 //               Center(
                 //     child: Container(
                 //       decoration: BoxDecoration(
@@ -79,83 +87,16 @@ class _BroadcastViewState extends State<BroadcastView> {
                 builder: (context, AsyncSnapshot snapshot) {
                   return Column(
                     children: [
-                      Slider(
-                          value: (context
-                                      .read<NavigationManagement>()
-                                      .controllerPlaying
-                                      ?.value
-                                      .position
-                                      .inSeconds ??
-                                  0) +
-                              0.0,
-                          max: (context
-                                      .read<NavigationManagement>()
-                                      .controllerPlaying
-                                      ?.value
-                                      .duration
-                                      .inSeconds ??
-                                  1) +
-                              0.0,
-                          min: 0,
-                          onChanged: (value) {
-                            context
-                                .read<NavigationManagement>()
-                                .controllerPlaying
-                                ?.seekTo(Duration(seconds: value.round()));
-                          }),
+                      Slider(value: 1, max: 1, min: 0, onChanged: (value) {}),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Row(
                           children: [
-                            IconButton(
-                              onPressed: () async {
-                                Duration? dur = await context
-                                    .read<NavigationManagement>()
-                                    .controllerPlaying
-                                    ?.position;
-                                if (dur != null) {
-                                  dur -= const Duration(seconds: 15);
-                                  context
-                                      .read<NavigationManagement>()
-                                      .controllerPlaying
-                                      ?.seekTo(dur);
-                                }
-                              },
-                              icon: Icon(
-                                Icons.arrow_back_ios,
-                                color: Colors.white,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                context.read<NavigationManagement>().pause();
-                              },
-                              icon: Icon(
-                                context.watch<NavigationManagement>().pauseVideo
-                                    ? Icons.play_arrow
-                                    : Icons.pause,
-                                color: Colors.white,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () async {
-                                Duration? dur = await context
-                                    .read<NavigationManagement>()
-                                    .controllerPlaying
-                                    ?.position;
-                                if (dur != null) {
-                                  dur += const Duration(seconds: 15);
-                                  context
-                                      .read<NavigationManagement>()
-                                      .controllerPlaying
-                                      ?.seekTo(dur);
-                                }
-                              },
-                              icon: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.white,
-                              ),
-                            ),
+                            widget.playUrl.started.isAfter(DateTime.now())
+                                ? Text(
+                                    "Stream starts on ${widget.playUrl.started.toString().substring(11, 19)}")
+                                : Text(
+                                    "Stream started on ${widget.playUrl.started.toString().substring(11, 19)}"),
                             Expanded(child: Container()),
                             Icon(Icons.volume_up_rounded),
                             Slider(
@@ -170,50 +111,7 @@ class _BroadcastViewState extends State<BroadcastView> {
                                       .read<NavigationManagement>()
                                       .controllerPlaying
                                       ?.setVolume(value);
-                                }),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context
-                                        .read<InteractionManagement>()
-                                        .like(widget.playUrl.id);
-                                  },
-                                  child: Icon(
-                                    context
-                                            .watch<InteractionManagement>()
-                                            .likes
-                                            .contains(widget.playUrl.id)
-                                        ? Icons.thumb_up_alt_sharp
-                                        : Icons.thumb_up_outlined,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    context
-                                        .read<InteractionManagement>()
-                                        .bookmark(widget.playUrl.id);
-                                  },
-                                  child: Icon(
-                                    context
-                                            .watch<InteractionManagement>()
-                                            .bookmarks
-                                            .contains(widget.playUrl.id)
-                                        ? Icons.bookmark
-                                        : Icons.bookmark_outline,
-                                    size: 30,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            ),
+                                })
                           ],
                         ),
                       ),
@@ -242,7 +140,9 @@ class _BroadcastViewState extends State<BroadcastView> {
                     height: 6,
                   ),
                   Text(
-                    "${widget.playUrl.views} viewers",
+                    widget.playUrl.started.isAfter(DateTime.now())
+                        ? "${widget.playUrl.viewers} other waiting"
+                        : "${widget.playUrl.viewers} other streamers",
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge

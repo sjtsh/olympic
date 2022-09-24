@@ -7,14 +7,14 @@ import '../Providers/UserManagement.dart';
 class ExceptionHandler {
   static Future<bool> catchFrom(
       {required Function() function, required BuildContext context}) async {
-    // try {
+    try {
       await function();
       return true;
-    // } catch (e) {
-    //   // scaffoldMessengerKey
-    //   context.read<UserManagement>().showSnackbar(e.toString());
-    //   print(e);
-    //   return Future.value(false);
-    // }
+    } catch (e) {
+      // scaffoldMessengerKey
+      context.read<UserManagement>().showSnackbar(e.toString());
+      print(e);
+      return Future.value(false);
+    }
   }
 }

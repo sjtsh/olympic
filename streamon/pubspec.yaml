@@ -32,11 +32,21 @@ dependencies:
   provider:
   lottie:
   hovering:
-  firebase_auth:
+  firebase_auth: ^3.10.0
   firebase_core:
   cupertino_icons: ^1.0.2
   cloud_firestore:
   flutter_staggered_grid_view: ^0.6.2
+  cached_network_image:
+  flutter_svg: ^1.1.5
+  dropdown_button2:
+  syncfusion_flutter_calendar: ^20.2.36
+  flutter_staggered_animations: ^1.0.0
+  time_picker_widget:
+  shimmer:
+  video_player: ^2.4.7
+  video_thumbnail_imageview: ^0.0.5
+  path_provider:
 
 dev_dependencies:
   flutter_test:

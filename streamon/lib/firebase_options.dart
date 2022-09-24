@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1083271682279',
     projectId: 'streamon-1ddfe',
     authDomain: 'streamon-1ddfe.firebaseapp.com',
+    databaseURL: 'https://streamon-1ddfe-default-rtdb.firebaseio.com',
     storageBucket: 'streamon-1ddfe.appspot.com',
     measurementId: 'G-YDMNHF6CNV',
   );

@@ -69,6 +69,7 @@ class SignInManagement with ChangeNotifier, DiagnosticableTreeMixin {
           context: context);
       return success;
     }
+
     return Future.value(false);
   }
 

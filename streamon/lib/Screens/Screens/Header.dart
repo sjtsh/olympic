@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:streamon/Components/DialogPrompt.dart';
 
 import '../../Components/TextField.dart';
 import '../../Providers/NavigationManagement.dart';
@@ -12,8 +14,8 @@ class Header extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       child: Row(
         children: [
-          Image.asset(
-            "assets/logo.png",
+          SvgPicture.network(
+            "https://olympics.com/images/static/b2p-images/logo_color.svg",
             height: 50,
           ),
           SizedBox(
@@ -27,79 +29,49 @@ class Header extends StatelessWidget {
             ),
           ),
           Expanded(child: Container()),
-          PersonalTextField(
-              width: 250,
-              controller: TextEditingController(),
-              onChanged: (String? input) {},
-              isDense: true,
-              prefix: Icon(Icons.search)),
-          SizedBox(
-            width: 20,
-          ),
-          Row(
-              children: ["Live", "Highlights", "My Bookmarks", "Blogs",]
-                  .asMap()
-                  .entries
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          print(context.read<NavigationManagement>().index);
-                          context.read<NavigationManagement>().index = e.key;
-                        },
-                        child:  Container(
-                          color: context.watch<NavigationManagement>().index ==
-                              e.key ? Colors.white.withOpacity(0.1) : Colors.transparent,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              e.value,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
+          context.watch<UserManagement>().localUser?.admin ?? false
+              ? Container()
+              : Row(
+                  children: [
+                  "Live",
+                  "Highlights",
+                  "My Bookmarks",
+                  "My Likes",
+                  "Blogs",
+                ]
+                      .asMap()
+                      .entries
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              context
+                                  .read<NavigationManagement>()
+                                  .navigationIndex = e.key;
+                            },
+                            child: Container(
+                              color: context
+                                          .watch<NavigationManagement>()
+                                          .navigationIndex ==
+                                      e.key
+                                  ? Colors.white.withOpacity(0.1)
+                                  : Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  e.value,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-
-                      ),
-                    ),
-                  )
-                  .toList()),
-          // GestureDetector(onTap: (){
-          // print("onTap");
-          // },
-          //   onTapDown: (TapDownDetails details) {
-          //   print("hwllo world");
-          //     showMenu(
-          //         context: context,
-          //         position: RelativeRect.fromLTRB(details.globalPosition.dx,
-          //             details.globalPosition.dy, 0, 0),
-          //         items: <Widget>[
-          //           getPopupMenuButton(context),
-          //           Row(
-          //             children: [
-          //               Icon(Icons.password),
-          //               SizedBox(
-          //                 width: 12,
-          //               ),
-          //               Text("Change Password"),
-          //             ],
-          //           ),
-          //           Row(
-          //             children: [
-          //               Icon(Icons.logout),
-          //               SizedBox(
-          //                 width: 12,
-          //               ),
-          //               Text("Logout"),
-          //             ],
-          //           )
-          //         ].map((e) => PopupMenuItem(child: e)).toList());
-          //   },
-          //   child: getPopupMenuButton(context),
-          // ),
+                      )
+                      .toList()),
           PopupMenuButton(
             itemBuilder: (_) {
               return <Widget>[
@@ -122,7 +94,28 @@ class Header extends StatelessWidget {
                     Text("Logout"),
                   ],
                 )
-              ].map((e) => PopupMenuItem(child: e)).toList();
+              ]
+                  .asMap()
+                  .entries
+                  .map((e) => PopupMenuItem(
+                        value: e.key,
+                        child: e.value,
+                      ))
+                  .toList();
+            },
+            onSelected: (int i) {
+              switch (i) {
+                case 0:
+                  showDialog(
+                      context: context,
+                      builder: (_) {
+                        return DialogPrompt();
+                      });
+                  break;
+                case 1:
+                  context.read<UserManagement>().logout(context);
+                  break;
+              }
             },
             child: getPopupMenuButton(context),
           ),

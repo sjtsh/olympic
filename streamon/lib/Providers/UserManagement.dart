@@ -10,13 +10,14 @@ import 'SignInManagement.dart';
 import 'SignUpManagement.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-    GlobalKey<ScaffoldMessengerState>();
+GlobalKey<ScaffoldMessengerState>();
 
 class UserManagement with ChangeNotifier, DiagnosticableTreeMixin {
   int _index = 1;
   User? _user;
   bool _listening = false;
   LocalUser? _localUser;
+  bool animationOver = true;
 
   bool get listening => _listening;
 
@@ -49,31 +50,39 @@ class UserManagement with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   Future<void> showSnackbar(String text) async {
-    await ScaffoldMessenger.of(scaffoldMessengerKey.currentContext!)
+    animationOver = false;
+    notifyListeners();
+
+    Future.delayed(Duration(milliseconds: 50));
+    await ScaffoldMessenger
+        .of(scaffoldMessengerKey.currentContext!)
         .showSnackBar(
-          SnackBar(
-            backgroundColor: Color(0xff2f2f2f),
-            duration: Duration(seconds: 5),
-            content: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.info,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Expanded(
-                    child: Text(
+      SnackBar(
+        backgroundColor: Color(0xff2f2f2f),
+        duration: Duration(seconds: 5),
+        content: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.info,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            Expanded(
+                child: Text(
                   text,
                   style: TextStyle(color: Colors.white),
                 )),
-              ],
-            ),
-          ),
-        )
+          ],
+        ),
+      ),
+    )
         .closed;
+    Future.delayed(Duration(milliseconds: 50))
+        .then((value) => animationOver = true);
+    notifyListeners();
   }
 
   logout(BuildContext context) async {
