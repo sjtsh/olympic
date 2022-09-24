@@ -20,7 +20,7 @@ class Header extends StatelessWidget {
             width: 12,
           ),
           Text(
-            "Stream On",
+            "Olympic On",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ class Header extends StatelessWidget {
             width: 20,
           ),
           Row(
-              children: ["News", "Fixtures", "Coaches", "Fan Merch", "Discover"]
+              children: ["Live", "Highlights", "My Bookmarks", "Blogs",]
                   .asMap()
                   .entries
                   .map(
@@ -48,32 +48,21 @@ class Header extends StatelessWidget {
                           print(context.read<NavigationManagement>().index);
                           context.read<NavigationManagement>().index = e.key;
                         },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
+                        child:  Container(
+                          color: context.watch<NavigationManagement>().index ==
+                              e.key ? Colors.white.withOpacity(0.1) : Colors.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
                               e.value,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
-                                color: context
-                                            .watch<NavigationManagement>()
-                                            .index ==
-                                        e.key
-                                    ? Colors.white
-                                    : Colors.white.withOpacity(0.4),
+                                color: Colors.white,
                               ),
                             ),
-                            Container(
-                              width: 30,
-                              height: 5,
-                              color:
-                                  context.watch<NavigationManagement>().index ==
-                                          e.key
-                                      ? Colors.white
-                                      : Colors.white.withOpacity(0.1),
-                            )
-                          ],
+                          ),
                         ),
+
                       ),
                     ),
                   )

@@ -42,34 +42,35 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: PersonalThemeData().getLightThemeData(),
-      home: Stack(
-        children: [
-          index == 0
-              ? SignInScreen()
-              : index == 1
-                  ? SignUpScreen()
-                  :
-                  HomeScreen(),
-          Positioned(
-            right: 20,
-            top: 30,
-            child: Container(
-              height: 100,
-              width: 300,
-              child: ScaffoldMessenger(
-                child: Scaffold(
-                key: scaffoldMessengerKey,
-                  backgroundColor: Colors.transparent,
-                  body: Container(
-                    height: 50,
-                    width: 300,
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
+      home: HomeScreen(),
+      // home: Stack(
+      //   children: [
+      //     index == 0
+      //         ? SignInScreen()
+      //         : index == 1
+      //             ? SignUpScreen()
+      //             :
+      //             HomeScreen(),
+      //     Positioned(
+      //       right: 20,
+      //       top: 30,
+      //       child: Container(
+      //         height: 100,
+      //         width: 300,
+      //         child: ScaffoldMessenger(
+      //           child: Scaffold(
+      //           key: scaffoldMessengerKey,
+      //             backgroundColor: Colors.transparent,
+      //             body: Container(
+      //               height: 50,
+      //               width: 300,
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //     )
+      //   ],
+      // ),
     );
   }
 }
