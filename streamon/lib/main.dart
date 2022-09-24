@@ -52,10 +52,10 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     // context.read<InteractionManagement>().setVideos();
     // Future.delayed(Duration(seconds: 1)).then((value) {
-    //   context.read<InteractionManagement>().getLiveVideos();
-    //   context.read<InteractionManagement>().getBookmarks();
-    //   context.read<InteractionManagement>().getLikes();
-    //   context.read<InteractionManagement>().getVideos();
+      context.read<InteractionManagement>().getLiveVideos();
+      context.read<InteractionManagement>().getBookmarks();
+      context.read<InteractionManagement>().getLikes();
+      context.read<InteractionManagement>().getVideos();
     //   if (kDebugMode) {
     //     context.read<SignInManagement>().emailController.text =
     //         "sajatshrestha@gmail.com";

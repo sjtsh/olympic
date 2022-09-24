@@ -105,14 +105,14 @@ class Header extends StatelessWidget {
             },
             onSelected: (int i) {
               switch (i) {
-                case 0:
+                case 1:
                   showDialog(
                       context: context,
                       builder: (_) {
                         return DialogPrompt();
                       });
                   break;
-                case 1:
+                case 2:
                   context.read<UserManagement>().logout(context);
                   break;
               }
