@@ -6,10 +6,12 @@ import 'package:streamon/Components/DialogPrompt.dart';
 import '../../Components/TextField.dart';
 import '../../Providers/NavigationManagement.dart';
 import '../../Providers/UserManagement.dart';
+import 'ManageUserScreen.dart';
 
 class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    UserManagement userManagement = context.watch<UserManagement>();
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -29,6 +31,46 @@ class Header extends StatelessWidget {
             ),
           ),
           Expanded(child: Container()),
+          if (!(userManagement.localUser?.admin ?? false)) Container() else Row(
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_){
+                    return ManageUserScreen();
+                    }));
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(6)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Icon(Icons.person_pin_circle_outlined,),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Text(
+                                "manage users",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ),
+                    SizedBox(width: 12,)
+                ],
+              ),
           context.watch<UserManagement>().localUser?.admin ?? false
               ? Container()
               : Row(
@@ -78,15 +120,6 @@ class Header extends StatelessWidget {
                 getPopupMenuButton(context),
                 Row(
                   children: [
-                    Icon(Icons.password),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Text("Change Password"),
-                  ],
-                ),
-                Row(
-                  children: [
                     Icon(Icons.logout),
                     SizedBox(
                       width: 12,
@@ -106,13 +139,6 @@ class Header extends StatelessWidget {
             onSelected: (int i) {
               switch (i) {
                 case 1:
-                  showDialog(
-                      context: context,
-                      builder: (_) {
-                        return DialogPrompt();
-                      });
-                  break;
-                case 2:
                   context.read<UserManagement>().logout(context);
                   break;
               }

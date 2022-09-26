@@ -8,12 +8,20 @@ import '../Providers/UserManagement.dart';
 
 class AuthService {
   signOutListener(BuildContext context) {
-    if (!context.read<UserManagement>().listening) {
-      context.read<UserManagement>().listening = true;
+    if (!context
+        .read<UserManagement>()
+        .listening) {
+      context
+          .read<UserManagement>()
+          .listening = true;
       FirebaseAuth.instance.userChanges().listen((User? user) {
-        context.read<UserManagement>().user = user;
+        context
+            .read<UserManagement>()
+            .user = user;
         if (user == null) {
-          context.read<UserManagement>().localUser = null;
+          context
+              .read<UserManagement>()
+              .localUser = null;
         }
       });
     }
@@ -24,15 +32,22 @@ class AuthService {
     //TODO: SERVICE FOR AUTH
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       FirebaseFirestore.instance.collection('users').add({
         'userid': userCredential.user?.uid,
         'firstName': firstName.toLowerCase().replaceFirst(
-            firstName.split("").first, firstName.split("").first.toUpperCase()),
-        'phone': phone
+            firstName
+                .split("")
+                .first, firstName
+            .split("")
+            .first
+            .toUpperCase()),
+        'phone': phone,
+        'email': email,
+        'password': password
       });
       return true;
     } on FirebaseAuthException catch (e) {
@@ -47,8 +62,8 @@ class AuthService {
     return Future.value(false);
   }
 
-  Future<bool> signIn(
-      String email, String password, BuildContext context) async {
+  Future<bool> signIn(String email, String password,
+      BuildContext context) async {
     //TODO: SERVICE FOR AUTH
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -59,10 +74,14 @@ class AuthService {
           .collection('users')
           .where('userid', isEqualTo: userCredential.user!.uid)
           .get();
-          print(userData.docs.first.data());
-      context.read<UserManagement>().localUser =
+      print(userData.docs.first.data());
+      context
+          .read<UserManagement>()
+          .localUser =
           LocalUser.fromJson(userData.docs.first.data());
-          context.read<UserManagement>().user = userCredential.user;
+      context
+          .read<UserManagement>()
+          .user = userCredential.user;
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -72,5 +91,13 @@ class AuthService {
       }
     }
     return Future.value(false);
+  }
+
+  Future<List<LocalUser>> getUsers() async {
+    QuerySnapshot<Map<String, dynamic>> userData = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .get();
+    return userData.docs.map((e) => LocalUser.fromJson(e.data())).toList();
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:streamon/Providers/NavigationManagement.dart';
+import 'package:streamon/Screens/Screens/ManageUserScreen.dart';
 import 'Providers/InteractionManagement.dart';
 import 'Providers/SignInManagement.dart';
 import 'Providers/SignUpManagement.dart';
@@ -52,23 +53,23 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     // context.read<InteractionManagement>().setVideos();
     // Future.delayed(Duration(seconds: 1)).then((value) {
-      context.read<InteractionManagement>().getLiveVideos();
-      context.read<InteractionManagement>().getBookmarks();
-      context.read<InteractionManagement>().getLikes();
-      context.read<InteractionManagement>().getVideos();
-    //   if (kDebugMode) {
-    //     context.read<SignInManagement>().emailController.text =
-    //         "sajatshrestha@gmail.com";
-    //     context.read<SignInManagement>().passwordController.text =
-    //         "decrypt3521";
-    //
-    //     // context.read<SignInManagement>().emailController.text =
-    //     //     "admin@gmail.com";
-    //     // context.read<SignInManagement>().passwordController.text =
-    //     //     "adminuser";
-    //     context.read<SignInManagement>().logInToAccount(context).then(
-    //         (value) => context.read<UserManagement>().setindex(2, context));
-    //   }
+    context.read<InteractionManagement>().getLiveVideos();
+    context.read<InteractionManagement>().getBookmarks();
+    context.read<InteractionManagement>().getLikes();
+    context.read<InteractionManagement>().getVideos();
+    if (kDebugMode) {
+      // context.read<SignInManagement>().emailController.text =
+      //     "sajatshrestha@gmail.com";
+      // context.read<SignInManagement>().passwordController.text =
+      //     "decrypt3521";
+
+      // context.read<SignInManagement>().emailController.text = "admin@gmail.com";
+      // context.read<SignInManagement>().passwordController.text = "adminuser";
+      // context
+      //     .read<SignInManagement>()
+      //     .logInToAccount(context)
+      //     .then((value) => context.read<UserManagement>().setindex(2, context));
+    }
     // });
   }
 
